@@ -1,14 +1,15 @@
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 
 class Token {
-    enum TokenType { NUMBER, OPERATOR, LEFT_PARENTHESIS, RIGHT_PARENTHESIS};
+    enum TokenType { NUMBER, OPERATOR, LEFT_PARENTHESIS, RIGHT_PARENTHESIS,UNARY_MINUS};
     
-    private TokenType type;
-    private String value;
+    private final TokenType type;
+    private final String value;
 
     public Token(TokenType type,String value){
         this.type = type;
@@ -47,10 +48,20 @@ class Tokenizer {
                 i=j-1; // update i considering i++
             }
 
-            else if("+-*/".indexOf(ch)!=-1){
+            else if("+^*/".indexOf(ch)!=-1){
                 tokens.add(new Token(Token.TokenType.OPERATOR, String.valueOf(ch)));
             }
-            
+            else if(ch=='-'){
+
+                if(i==0 || 
+                   i>0 && (tokens.get(tokens.size()-1).getType()==Token.TokenType.LEFT_PARENTHESIS || 
+                   tokens.get(tokens.size()-1).getType()==Token.TokenType.OPERATOR)){
+                        tokens.add(new Token(Token.TokenType.UNARY_MINUS,String.valueOf("~"))); 
+                   } else{
+                        tokens.add(new Token(Token.TokenType.OPERATOR,String.valueOf(ch)));
+                   }
+
+            }
             else if(ch=='(')
             {
                 tokens.add(new Token(Token.TokenType.LEFT_PARENTHESIS,"("));
@@ -103,6 +114,9 @@ public class ShuntingYard {
                         postFixList.add(operands.pop());
                     }   operands.pop();
                 }
+                case UNARY_MINUS -> {
+                    operands.push(value);
+                }
                 default -> {
                 }
             }
@@ -118,15 +132,19 @@ public class ShuntingYard {
 
 
     private int getPrecedence(String operator) {
+        
         return switch(operator) 
         {
+
             case "+","-" -> 1;
             case "*","/" -> 2;
             case "^" -> 3;
+            case "~" ->4;
+
+            
             default -> 0;
         };
     }
-
 }
 
 class Evaluator {
@@ -139,7 +157,13 @@ class Evaluator {
                 double operand1 = operanDoubles.pop();
                 double result = performOperation(token,operand1,operand2);
                 operanDoubles.push(result);
-            }else{
+            }
+            else if(isUnary(token)){
+                double oper1= operanDoubles.pop();
+                double result = performOperation(token, oper1,0.0);
+                operanDoubles.push(result);
+            }
+            else{
                 operanDoubles.push(Double.valueOf(token));
             }
         }
@@ -153,9 +177,13 @@ class Evaluator {
     private boolean isOperator(String token) {
         return (("+-*/^").contains(token));
     }
+    private boolean isUnary(String token) {
+        return token.equals("~");
+    }
 
     private double performOperation(String operator,Double oper1,Double oper2){
         return switch(operator){
+            case "~" -> 0-oper1;
             case "+" -> oper1+oper2;
             case "-" -> oper1-oper2;
             case "*" -> oper1*oper2;

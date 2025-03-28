@@ -9,6 +9,8 @@ public class Main {
 
         System.out.println("Enter your expression: ");
         String userInput = scanner.nextLine();
+        // remove whitespaces:
+        userInput=userInput.replaceAll("\\s", ""); 
         Calculator calculator = new Calculator(userInput);
         System.out.println(calculator.getResult());
     }

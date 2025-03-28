@@ -48,7 +48,7 @@ class Tokenizer {
                 i=j-1; // update i considering i++
             }
 
-            else if("+^*/".indexOf(ch)!=-1){
+            else if("+^*/%".indexOf(ch)!=-1){
                 tokens.add(new Token(Token.TokenType.OPERATOR, String.valueOf(ch)));
             }
             else if(ch=='-'){
@@ -137,7 +137,7 @@ public class ShuntingYard {
         {
 
             case "+","-" -> 1;
-            case "*","/" -> 2;
+            case "*","/","%" -> 2;
             case "^" -> 3;
             case "~" ->4;
 
@@ -175,7 +175,7 @@ class Evaluator {
     }
 
     private boolean isOperator(String token) {
-        return (("+-*/^").contains(token));
+        return (("+-*/^%").contains(token));
     }
     private boolean isUnary(String token) {
         return token.equals("~");
@@ -188,6 +188,7 @@ class Evaluator {
             case "-" -> oper1-oper2;
             case "*" -> oper1*oper2;
             case "/" -> oper1/oper2;
+            case "%" -> oper1%oper2;
             case "^" -> Math.pow(oper1, oper2);
             default -> throw new IllegalArgumentException("Unknown operator: "+operator);
         };

@@ -7,23 +7,19 @@ public class Main {
 
 
     public static void start(){
-        String GREEN = "\u001B[32m";
-         String RESET = "\u001B[0m";
+        String GREEN = "\u001B[32m";  // Green color
+        String BOLD = "\u001B[1m";    // Bold text
+        String RESET = "\u001B[0m";   // Reset formatting
         int size = 29;
         char[] length = new char[size];
         for(int i=0;i<size;i++) {
             length[i]='*';
         }
-        String message = "Shunting_Yard_Calculator!";
-        System.out.print(GREEN);
-        for(char ch:length)
-            System.out.print(ch);
-        System.out.println();
-        System.out.println("* "+message+" *");
-         for(char ch:length)
-            System.out.print(ch);
-        System.out.println();
-        System.out.print(RESET);
+        System.out.println(GREEN+BOLD);
+        System.out.println("╔═══════════════════════════╗");
+        System.out.println("║ Shunting_Yard_Calculator! ║");
+        System.out.println("╚═══════════════════════════╝");
+        System.out.println(RESET);
     }
 
     public static void main(String[] args) {

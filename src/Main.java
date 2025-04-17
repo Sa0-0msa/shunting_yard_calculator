@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
 
 
-    public static void start(){
+    public static void draw(){
         String GREEN = "\u001B[32m";  // Green color
         String BOLD = "\u001B[1m";    // Bold text
         String RESET = "\u001B[0m";   // Reset formatting
@@ -23,7 +23,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        start();
+        draw();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your expression: ");
         String userInput = scanner.nextLine();
